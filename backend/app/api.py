@@ -60,3 +60,12 @@ async def func():
     fast_mqtt.publish("/mqtt", "Hello from Fastapi") #publishing mqtt topic
 
     return {"result": True,"message":"Published" }
+
+
+dataArray=[{id:0,name:"Hammad"}]
+
+@app.get("/user/1")
+async def getUser():
+
+    await dataArray.append({id:1,name:"John"})
+    return dataArray
