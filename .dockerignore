@@ -1,0 +1,41 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual envs
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Git
+.git/
+.gitignore
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.local
+
+# Logs
+*.log
+
+# Large files (customize as needed)
+data/
+datasets/
+models/
+*.csv
+*.pkl
+*.pth
+*.pt
+*.h5

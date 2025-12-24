@@ -1,1 +1,12 @@
-    
+version: '3.9'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"  # Expose for direct access if needed
+    volumes:
+      - ./backend:/app  # Live code reload
+    environment:
+      - DEBUG=1
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
