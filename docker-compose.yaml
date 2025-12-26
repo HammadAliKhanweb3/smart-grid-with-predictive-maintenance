@@ -1,12 +1,46 @@
+# version: '3.9'
+
+# services:
+#   backend:
+#     build: ./backend
+#     ports:
+#       - "8000:8000"  # Expose for direct access if needed
+#     volumes:
+#       - ./backend:/app  # Live code reload
+#     environment:
+#       - DEBUG=1
+#     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 version: '3.9'
 
 services:
   backend:
     build: ./backend
     ports:
-      - "8000:8000"  # Expose for direct access if needed
+      - "8000:8000"
     volumes:
       - ./backend:/app  # Live code reload
     environment:
       - DEBUG=1
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      - influxdb
+    env_file:
+      - ./backend/.env  # Create this file with your secrets
+
+  influxdb:
+    image: influxdb:latest
+    restart: always
+    ports:
+      - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: sensor_user
+      DOCKER_INFLUXDB_INIT_PASSWORD: sensor_pass
+      DOCKER_INFLUXDB_INIT_ORG: smart-grid
+      DOCKER_INFLUXDB_INIT_BUCKET: sensors_bucket
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: my-super-secret-token-CHANGE-IN-PRODUCTION
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+
+volumes:
+  influxdb_data:
