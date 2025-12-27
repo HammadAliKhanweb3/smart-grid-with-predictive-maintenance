@@ -55,3 +55,4 @@ async def analytics(
     """
     data = get_historical_data(interval=interval, days=days)
     return {"interval": interval, "data": data}
+
