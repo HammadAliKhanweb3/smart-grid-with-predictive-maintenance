@@ -47,7 +47,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 @app.get("/analytics")
 async def analytics(
-    interval: str = Query("daily", regex="^(daily|weekly|monthly|yearly)$"),
+    interval: str = Query("daily", pattern="^(daily|weekly|monthly|yearly)$"),
     days: int = Query(30, ge=1, le=365)
 ):
     """
@@ -56,3 +56,10 @@ async def analytics(
     data = get_historical_data(interval=interval, days=days)
     return {"interval": interval, "data": data}
 
+# from fastapi import FastAPI
+
+# app = FastAPI()
+
+# @app.get("/")
+# def root():
+#     return {"data":"Hammad"}
