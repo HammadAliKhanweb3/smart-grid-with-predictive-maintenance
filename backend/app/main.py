@@ -2,6 +2,7 @@ from fastapi import FastAPI, WebSocket, Query
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from contextlib import asynccontextmanager
+import asyncio
 
 from .mqtt_client import start_mqtt_client
 from .websocket_manager import manager
@@ -15,7 +16,8 @@ mqtt_client = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global mqtt_client
-    mqtt_client = start_mqtt_client()
+    loop = asyncio.get_event_loop() 
+    mqtt_client = start_mqtt_client(loop)
     logger.info("Application startup complete")
     yield
     mqtt_client.loop_stop()
@@ -53,13 +55,5 @@ async def analytics(
     """
     Get aggregated historical data for charts
     """
-    data = get_historical_data(interval=interval, days=days)
+    data = get_historical_data(interval=interval)
     return {"interval": interval, "data": data}
-
-# from fastapi import FastAPI
-
-# app = FastAPI()
-
-# @app.get("/")
-# def root():
-#     return {"data":"Hammad"}

@@ -12,53 +12,66 @@ query_api: QueryApi = client.query_api()
 
 def write_point(device_id: str, data: dict):
     try:
+        # Ensure all fields are present to avoid pivot issues later
         point = Point("sensor_readings") \
             .tag("device", device_id) \
-            .field("input_voltage", float(data["input_voltage"])) \
-            .field("out_current1", float(data["out_current1"])) \
-            .field("out_voltage1", float(data["out_voltage1"])) \
-            .field("out_current2", float(data["out_current2"])) \
-            .field("out_voltage2", float(data["out_voltage2"])) \
-            .field("out_current3", float(data["out_current3"])) \
-            .field("out_voltage3", float(data["out_voltage3"]))
+            .field("input_current", float(data.get("input_current", 0))) \
+            .field("input_voltage", float(data.get("input_voltage", 0))) \
+            .field("out_current1", float(data.get("out_current1", 0))) \
+            .field("out_voltage1", float(data.get("out_voltage1", 0))) \
+            .field("out_current2", float(data.get("out_current2", 0))) \
+            .field("out_voltage2", float(data.get("out_voltage2", 0))) \
+            .field("out_current3", float(data.get("out_current3", 0))) \
+            .field("out_voltage3", float(data.get("out_voltage3", 0)))
 
         write_api.write(bucket=INFLUXDB_BUCKET, org=INFLUXDB_ORG, record=point)
         logger.info(f"Stored data for device: {device_id}")
     except Exception as e:
         logger.error(f"InfluxDB write error: {e}")
 
-def get_historical_data(interval: str = "daily", days: int = 30):
-    """
-    Returns aggregated data for charts
-    interval: daily, weekly, monthly, yearly
-    """
-    window_map = {
-        "daily": "1d",
-        "weekly": "7d",
-        "monthly": "30d",
-        "yearly": "365d"
+def get_historical_data(interval: str = "daily"):
+    config = {
+        "daily":   {"range": "-24h", "window": "5m"},
+        "weekly":  {"range": "-7d",  "window": "30m"},
+        "monthly": {"range": "-30d", "window": "2h"},
+        "yearly":  {"range": "-365d","window": "1d"},
     }
-    window = window_map.get(interval, "1d")
-    range_start = f"-{days}d" if interval == "daily" else f"-365d"
+    
+    settings = config.get(interval, config["daily"])
 
+    # Updated Query: Includes group() to ensure all fields are processed together before pivot
     query = f'''
     from(bucket: "{INFLUXDB_BUCKET}")
-      |> range(start: {range_start})
+      |> range(start: {settings["range"]})
       |> filter(fn: (r) => r._measurement == "sensor_readings")
-      |> aggregateWindow(every: {window}, fn: mean, createEmpty: false)
-      |> yield(name: "mean")
+      |> aggregateWindow(every: {settings["window"]}, fn: mean, createEmpty: false)
+      |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
     '''
+
     try:
         tables = query_api.query(query)
         results = []
+        
         for table in tables:
             for record in table.records:
+                # We use .get() on record.values because pivot turns fields into dictionary keys
                 results.append({
                     "time": record.get_time().isoformat(),
                     "device": record.values.get("device"),
-                    "input_voltage": record.get_value(),
-                    "field": record.get_field()
+                    "input_voltage": record.values.get("input_voltage"),
+                    "input_current": record.values.get("input_current"),
+                    "out_voltage1": record.values.get("out_voltage1"),
+                    "out_current1": record.values.get("out_current1"),
+                    "out_voltage2": record.values.get("out_voltage2"),
+                    "out_current2": record.values.get("out_current2"),
+                    "out_voltage3": record.values.get("out_voltage3"),
+                    "out_current3": record.values.get("out_current3"),
                 })
+        
+        # If results is still empty, it means the range/window didn't find data
+        if not results:
+            logger.warning(f"No data found for range {settings['range']} with window {settings['window']}")
+            
         return results
     except Exception as e:
         logger.error(f"Query error: {e}")

@@ -4,6 +4,10 @@ import logging
 from .influx import write_point
 from .websocket_manager import manager
 from .config import MQTT_BROKER_HOST, MQTT_BROKER_PORT, MQTT_USERNAME, MQTT_PASSWORD, MQTT_TOPIC
+import asyncio
+import uuid 
+
+main_loop = None
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +18,8 @@ def on_connect(client, userdata, flags, rc, properties=None):
         logger.info(f"Subscribed to topic: {MQTT_TOPIC}")
     else:
         logger.error(f"MQTT Connection failed with code {rc}")
+
+
 
 def on_message(client, userdata, msg):
     try:
@@ -32,14 +38,20 @@ def on_message(client, userdata, msg):
             "timestamp": payload.get("timestamp", None),
             "data": payload
         }
-        import asyncio
-        asyncio.create_task(manager.broadcast(broadcast_data))
+
+        if main_loop:
+           main_loop.call_soon_threadsafe(
+              lambda: asyncio.create_task(manager.broadcast(broadcast_data))
+           )
 
     except Exception as e:
         logger.error(f"Error processing MQTT message: {e}")
 
-def start_mqtt_client():
-    client = mqtt.Client(protocol=mqtt.MQTTv5)
+def start_mqtt_client(loop):
+    global main_loop
+    main_loop = loop
+    unique_id = f"smart_grid_backend_{uuid.uuid4().hex[:8]}"
+    client = mqtt.Client(client_id=unique_id,protocol=mqtt.MQTTv5)
     client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
     client.tls_set()  # EMQX Cloud requires TLS
     client.on_connect = on_connect

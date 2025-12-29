@@ -43,6 +43,7 @@ print("Publishing fake sensor data every 5 seconds... Press Ctrl+C to stop")
 try:
     while True:
         data = {
+            "input_current":round(random.uniform(5.0,32),3),
             "input_voltage": round(random.uniform(220.0, 240.0), 3),
             "out_current1": round(random.uniform(0.0, 15.0), 3),
             "out_voltage1": round(random.uniform(47.0, 49.0), 3),
