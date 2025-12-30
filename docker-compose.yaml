@@ -42,6 +42,25 @@ services:
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: my-super-secret-token-CHANGE-IN-PRODUCTION
     volumes:
       - influxdb_data:/var/lib/influxdb2
+  
+  frontend:
+    build: 
+      context: ./frontend
+      target: dev
+    container_name: smart-grid-frontend
+    ports:
+      - "3000:3000" 
+    volumes:
+      - ./frontend:/app  
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - WATCHPACK_POLLING=true  # Important for Windows/WSL hot-reload
+    depends_on:
+      - backend
+    stdin_open: true # Allows for interactive terminal debugging
+    tty: true
 
 volumes:
   influxdb_data:
