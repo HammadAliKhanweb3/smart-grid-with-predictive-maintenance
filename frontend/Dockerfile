@@ -1,6 +1,6 @@
  # --- STAGE 1: Base & Dependencies ---
 
-FROM node:20-slim AS base
+FROM node:20-alpine AS base
 
 # Set up pnpm environment
 
@@ -73,7 +73,7 @@ RUN pnpm run build
 
 # This is the tiny, secure final image for the cloud
 
-FROM node:20-slim AS runner
+FROM node:20-alpine AS runner
 
 WORKDIR /app
 
