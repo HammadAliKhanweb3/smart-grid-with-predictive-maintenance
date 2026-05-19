@@ -11,8 +11,8 @@ export function SiteHeader() {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
-        <h1 className="text-base font-medium m-8">Smart-Grid</h1>
-        <h2 className="text-base text-center font-medium m-8">Real-Time Data</h2>
+        <h1 className="text-base font-medium m-8 bg-green-600 p-2 px-3 rounded-lg">Smart-Grid</h1>
+        <h2 className="text-base text-center font-medium m-8 py-2 px-3 rounded-lg bg-green-600">Real-Time Data</h2>
         <div className="ml-auto flex items-center gap-2">
           <ThemeSelector/>
           <ModeToggle/>

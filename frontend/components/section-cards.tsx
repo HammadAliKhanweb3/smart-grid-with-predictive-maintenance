@@ -1,5 +1,4 @@
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
-
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
@@ -12,91 +11,82 @@ import {
 
 export function SectionCards() {
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+    <div className="grid grid-cols-6 md:grid-cols-6 gap-4 px-4 lg:px-6">
+      
+      {/* === SENSOR 1 (Remaining 3) === */}
+      {/* <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>Sensor 1</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">0.055 kWh</CardTitle>
+          <CardAction><Badge variant="outline"><IconTrendingUp /> +12.5%</Badge></CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm"><div className="font-medium">Energy</div></CardFooter>
+      </Card>
+
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
-          </CardAction>
+          <CardDescription>Sensor 1</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">49.80 Hz</CardTitle>
+          <CardAction><Badge variant="outline"><IconTrendingUp /> +12.5%</Badge></CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
-        </CardFooter>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm"><div className="font-medium">Frequency</div></CardFooter>
       </Card>
+
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingDown />
-              -20%
-            </Badge>
-          </CardAction>
+          <CardDescription>Sensor 1</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">0.45</CardTitle>
+          <CardAction><Badge variant="outline"><IconTrendingUp /> +12.5%</Badge></CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <IconTrendingDown className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +4.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
-        </CardFooter>
-      </Card>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm"><div className="font-medium">Power Factor</div></CardFooter>
+      </Card> */}
+
+      <SensorGroup name="Sensor 1" v="228.50 V" a="0.40 A" w="41.90 W" kwh="0.055 kWh" hz="49.80 Hz" pf="0.45" />
+      {/* Empty cells to finish Sensor 1's row if needed, but since you are filling all 6, we move to Sensor 2 */}
+
+      {/* === SENSOR 2 === */}
+      <SensorGroup name="Sensor 2" v="228.40 V" a="0.16 A" w="37.20 W" kwh="0.091 kWh" hz="49.80 Hz" pf="1.00" />
+
+      {/* === SENSOR 3 === */}
+      <SensorGroup name="Sensor 3" v="228.40 V" a="0.09 A" w="1.10 W" kwh="0.040 kWh" hz="49.70 Hz" pf="0.05" />
+
+      {/* === SENSOR 4 === */}
+      <SensorGroup name="Sensor 4" v="228.40 V" a="0.09 A" w="2.40 W" kwh="0.002 kWh" hz="49.80 Hz" pf="0.11" />
+
     </div>
+  )
+}
+
+/**
+ * Quick Helper component to avoid repeating the same 30 lines of code 
+ * for every single card.
+ */
+function SensorGroup({ name, v, a, w, kwh, hz, pf }: any) {
+  const metrics = [
+    { label: "Voltage", val: v },
+    { label: "Current", val: a },
+    { label: "Power", val: w },
+    { label: "Energy", val: kwh },
+    { label: "Frequency", val: hz },
+    { label: "PF", val: pf },
+  ];
+
+  return (
+    <>
+      {metrics.map((m) => (
+        <Card key={`${name}-${m.label}`} className="@container/card">
+          <CardHeader>
+            <CardDescription>{name}</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">{m.val}</CardTitle>
+            {/* <CardAction>
+              <Badge variant="outline"><IconTrendingUp /> +12.5%</Badge>
+            </CardAction> */}
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1.5 text-sm">
+            <div className="font-medium">{m.label}</div>
+          </CardFooter>
+        </Card>
+      ))}
+    </>
   )
 }
